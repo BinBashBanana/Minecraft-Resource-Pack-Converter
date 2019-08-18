@@ -450,7 +450,7 @@ itemDict = {
 
 
 def genPath(sub, item):
-    return "assets\\minecraft\\textures\\{}\\{}.png".format(sub, item)
+    return "assets/minecraft/textures/{}/{}.png".format(sub, item)
 
 for key, value in blockDict.items():
     try:
@@ -466,5 +466,7 @@ for key, value in itemDict.items():
     except:
         print("An error occured converting " + str(value) + ".png to " + str(key) + ".png")
 
-os.rename("assets\\minecraft\\textures\\block", "assets\\minecraft\\textures\\blocks")
-os.rename("assets\\minecraft\\textures\\item", "assets\\minecraft\\textures\\items")
+os.rename("assets/minecraft/textures/block", "assets/minecraft/textures/blocks")
+os.rename("assets/minecraft/textures/item", "assets/minecraft/textures/items")
+
+print("assets/minecraft/textures/item", "assets/minecraft/textures/items")
