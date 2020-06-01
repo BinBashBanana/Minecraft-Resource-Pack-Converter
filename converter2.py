@@ -7,22 +7,22 @@ minecraft_version = "1.13"
 pack_format = 4
 
 colors = [
-      "black",
-      "blue",
-      "brown",
-      "cyan",
-      "gray",
-      "green",
-      "light_blue",
-      "lime",
-      "magenta",
-      "orange",
-      "pink",
-      "purple",
-      "red",
-      "silver",
-      "white",
-      "yellow",
+    "black",
+    "blue",
+    "brown",
+    "cyan",
+    "gray",
+    "green",
+    "light_blue",
+    "lime",
+    "magenta",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "silver",
+    "white",
+    "yellow",
 ]
 
 tree_materials = [
@@ -353,36 +353,35 @@ if minecraft_version == "1.14":
     item_dict["dye_powder_red"] = "red_dye"
     item_dict["dye_powder_yellow"] = "yellow_dye"
 
-def genPath(subdir, item):
+def gen_path(subdir, item):
     return "assets/minecraft/textures/{}/{}.png".format(subdir, item)
 
 for key, value in block_dict.items():
-    source = genPath("block", value)
-    target = genPath("block", key)
+    source = gen_path("block", value)
+    target = gen_path("block", key)
     if os.path.isfile(source):
-        try:
-            os.rename(source, target)
-            if os.path.isfile(source + ".mcmeta"):
-                os.rename(source + ".mcmeta", target + ".mcmeta")
-                print("Successfully converted " + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
-            print("Successfully converted " + str(source) + " to " + str(target))
-        except:
-            print("An error occured converting " + str(source) + " to " + str(target))
+        # try:
+        os.rename(source, target)
+        if os.path.isfile(source + ".mcmeta"):
+            os.rename(source + ".mcmeta", target + ".mcmeta")
+            print("Successfully converted "
+                  + str(source) + ".mcmeta to "
+                  + str(target) + ".mcmeta")
+        print("Successfully converted " + str(source) + " to " + str(target))
+        # except:
+        #     print("An error occured converting " + str(source) + " to " + str(target))
     else:
         print(str(source) + " does not exist!")
 
 for key, value in item_dict.items():
-    source = genPath("item", value)
-    target = genPath("item", key)
+    source = gen_path("item", value)
+    target = gen_path("item", key)
     if os.path.isfile(source):
-        try:
-            os.rename(source, target)
-            if os.path.isfile(source + ".mcmeta"):
-                os.rename(source + ".mcmeta", target + ".mcmeta")
-                print("Successfully converted " + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
-            print("Successfully converted " + str(source) + " to " + str(target))
-        except:
-            print("An error occured converting " + str(source) + " to " + str(target))
+        os.rename(source, target)
+        if os.path.isfile(source + ".mcmeta"):
+            os.rename(source + ".mcmeta", target + ".mcmeta")
+            print("Successfully converted " + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
+        print("Successfully converted " + str(source) + " to " + str(target))
     else:
         print(str(source) + " does not exist!")
 
