@@ -126,6 +126,8 @@ block_dict = {
     "stonebrick_carved": "chiseled_stone_bricks",
     "stonebrick_cracked": "cracked_stone_bricks",
     "stonebrick_mossy": "mossy_stone_bricks",
+    "stone_slab_top": "smooth_stone",
+    "stone_slab_side": "smooth_stone_slab_side",
     "tallgrass": "grass",
     "torch_on": "torch",
     "trip_wire_source": "tripwire_hook",
@@ -230,6 +232,7 @@ item_dict = {
     "seeds_melon": "melon_seeds",
     "seeds_pumpkin": "pumpkin_seeds",
     "seeds_wheat": "wheat_seeds",
+    "sign": "oak_sign",
     "reeds": "sugar_cane",
     "slimeball": "slime_ball",
     "spider_eye_fermented": "fermented_spider_eye",
@@ -248,70 +251,101 @@ CORAL_TYPES = [
 ]
 
 unnecessary_blocks = [
+    "lantern",
+]
+
+unnecessary_blocks_search = [
     "blue_ice",
+    "bamboo_",
+    "barrel",
+    "bell",
+    "blast_furnace",
+    "campfire",
+    "cartography",
+    "composter",
     "conduit",
+    "cornflower",
+    "fletching_table",
+    "grindstone",
+    "jigsaw",
     "kelp",
-    "kelp_plant",
-    "dried_kelp_top",
-    "dried_kelp_side",
-    "dried_kelp_bottom",
-    "sea_pickle",
+    "lectern",
+    "loom",
+    "scaffolding",
     "seagrass",
-    "tall_seagrass_bottom",
-    "tall_seagrass_top",
+    "sea_pickle",
+    "smithing_table",
+    "smoker",
+    "stonecutter",
     "turtle_egg",
-    "turtle_egg_slightly_cracked",
-    "turtle_egg_very_cracked",
+    "sweet_berry_bush",
+    "wither_rose",
 ]
 
 unnecessary_items = [
+    "bamboo",
+    "bell",
+    "campfire",
     "cod_bucket",
     "pufferfish_bucket",
     "salmon_bucket",
     "tropical_fish_bucket",
-    "dried_kelp",
+    "black_dye",
+    "blue_dye",
+    "brown_dye",
+    "white_dye",
     "heart_of_the_sea",
-    "kelp",
+    "lantern",
+    "leather_horse_armor",
     "nautilus_shell",
     "phantom_membrane",
     "scute",
     "sea_pickle",
     "seagrass",
+    "suspicious_stew",
+    "sweet_berries",
     "trident",
     "turtle_egg",
     "turtle_helmet",
 ]
 
+unnecessary_item_search = [
+    "banner_pattern",
+    "crossbow",
+    "kelp",
+]
+
 def gen_path(subdir, item):
     """ Generate path. """
-    return "assets/minecraft/textures/{}/{}.png".format(subdir, item)
+    return "assets/minecraft/textures/{}/{}".format(subdir, item)
 
 
 def convert(source, target):
     """ Rename source to target. """
-    if os.path.isfile(source):
+    source_png = source + ".png"
+    target_png = target + ".png"
+    source_mcmeta = source_png + ".mcmeta"
+    target_mcmeta = target_png + ".mcmeta"
+    if os.path.isfile(source_png):
         # try:
-        os.rename(source, target)
-        if os.path.isfile(source + ".mcmeta"):
-            os.rename(source + ".mcmeta", target + ".mcmeta")
+        os.rename(source_png, target_png)
+        if os.path.isfile(source_mcmeta):
+            os.rename(source_mcmeta, target_mcmeta)
             print("Successfully converted "
-                  + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
-        print("Successfully converted " + str(source) + " to " + str(target))
+                  + str(source_mcmeta) + " to " + str(target_mcmeta))
+        print("Successfully converted " + str(source_png) + " to " + str(target_png))
         # except:
         #     print("An error occured converting " + str(source) + " to " + str(target))
     else:
-        print(str(source) + " does not exist!")
+        print(str(source_png) + " does not exist!")
 
 
-def remove(file):
+def remove(file, print_error):
     """ Remove file. """
     if os.path.isfile(file):
         os.remove(file)
-        if os.path.isfile(file + ".mcmeta"):
-            os.remove(file + ".mcmeta")
-            print("Successfully removed " + str(file) + ".mcmeta")
         print("Successfully removed " + str(file))
-    else:
+    elif print_error:
         print(str(file) + " does not exist!")
 
 
@@ -356,6 +390,7 @@ def convert_resourcepack():
     for key, value in item_dict.items():
         convert(gen_path("item", value), gen_path("item", key))
 
+
 def remove_unnecessary_files():
     """ Remove unnecessary files. """
     for coral_type in CORAL_TYPES:
@@ -373,10 +408,36 @@ def remove_unnecessary_files():
             unnecessary_items.append(material + "_sign")
 
     for block in unnecessary_blocks:
-        remove(gen_path("block", block))
-    for item in unnecessary_items:
-        remove(gen_path("item", item))
+        remove(gen_path("block", block + ".png"), False)
+        remove(gen_path("block", block + ".png.mcmeta"), False)
 
+    for item in unnecessary_items:
+        remove(gen_path("item", item + ".png"), False)
+        remove(gen_path("item", item + ".png.mcmeta"), False)
+
+    remaining_blocks = []
+    block_dir = "assets/minecraft/textures/block"
+    for block in os.listdir(block_dir):
+        block_path = os.path.join(block_dir, block)
+        if os.path.isfile(block_path):
+            remaining_blocks.append(block)
+
+    remaining_items = []
+    item_dir = "assets/minecraft/textures/item"
+    for item in os.listdir(item_dir):
+        item_path = os.path.join(item_dir, item)
+        if os.path.isfile(item_path):
+            remaining_items.append(item)
+
+    for name in unnecessary_blocks_search:
+        for block in remaining_blocks:
+            if name in block:
+                remove(gen_path("block", block), True)
+
+    for name in unnecessary_item_search:
+        for item in remaining_items:
+            if name in item:
+                remove(gen_path("item", item), True)
 
 def main():
     """ Main function. """
