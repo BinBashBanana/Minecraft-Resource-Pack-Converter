@@ -3,7 +3,7 @@
 
 import os
 
-minecraft_version = "1.13"
+minecraft_version = "1.14"
 pack_format = 4
 
 COLORS = [
@@ -81,6 +81,7 @@ block_dict = {
     "noteblock": "note_block",
     "observer_back_lit": "observer_back_on",
     "piston_top_normal": "piston_top",
+    "portal": "nether_portal",
     "prismarine_dark": "dark_prismarine",
     "prismarine_rough": "prismarine",
     "pumpkin_face_off": "carved_pumpkin",
@@ -150,6 +151,8 @@ item_dict = {
     "carrot_golden": "golden_carrot",
     "chicken_cooked": "cooked_chicken",
     "chicken_raw": "chicken",
+    "chorus_fruit_popped": "popped_chorus_fruit",
+    "door_iron": "iron_door",
     "dye_powder_black": "ink_sac",
     "dye_powder_blue": "lapis_lazuli",
     "dye_powder_brown": "cocoa_beans",
@@ -189,6 +192,7 @@ item_dict = {
     "gold_sword": "golden_sword",
     "map_empty": "map",
     "map_filled": "filled_map",
+    "map_filled_markings": "filled_map_markings",
     "melon": "melon_slice",
     "melon_speckled": "glistering_melon_slice",
     "minecart_chest": "chest_minecart",
@@ -199,6 +203,7 @@ item_dict = {
     "minecart_tnt": "tnt_minecart",
     "mutton_cooked": "cooked_mutton",
     "mutton_raw": "mutton",
+    "netherbrick": "nether_brick",
     "porkchop_cooked": "cooked_porkchop",
     "porkchop_raw": "porkchop",
     "potato_baked": "baked_potato",
@@ -225,6 +230,7 @@ item_dict = {
     "seeds_melon": "melon_seeds",
     "seeds_pumpkin": "pumpkin_seeds",
     "seeds_wheat": "wheat_seeds",
+    "reeds": "sugar_cane",
     "slimeball": "slime_ball",
     "spider_eye_fermented": "fermented_spider_eye",
     "totem": "totem_of_undying",
@@ -237,8 +243,8 @@ item_dict = {
 }
 
 CORAL_TYPES = [
-    "brain", "bubble", "horn", "tube", "dead_brain",
-    "dead_bubble", "dead_fire", "dead_horn", "dead_tube"
+    "brain", "bubble", "fire", "horn", "tube",
+    "dead_brain", "dead_bubble", "dead_fire", "dead_horn", "dead_tube"
 ]
 
 unnecessary_blocks = [
@@ -259,7 +265,21 @@ unnecessary_blocks = [
 ]
 
 unnecessary_items = [
-    "",
+    "cod_bucket",
+    "pufferfish_bucket",
+    "salmon_bucket",
+    "tropical_fish_bucket",
+    "dried_kelp",
+    "heart_of_the_sea",
+    "kelp",
+    "nautilus_shell",
+    "phantom_membrane",
+    "scute",
+    "sea_pickle",
+    "seagrass",
+    "trident",
+    "turtle_egg",
+    "turtle_helmet",
 ]
 
 def gen_path(subdir, item):
@@ -350,11 +370,12 @@ def remove_unnecessary_files():
         unnecessary_blocks.append("stripped_" + material + "_log_top")
         if material != "oak":
             unnecessary_blocks.append(material + "_trapdoor")
+            unnecessary_items.append(material + "_sign")
 
     for block in unnecessary_blocks:
         remove(gen_path("block", block))
-    # for item in unnecessary_items:
-    #     remove(gen_path("item", item))
+    for item in unnecessary_items:
+        remove(gen_path("item", item))
 
 
 def main():
@@ -368,7 +389,7 @@ def main():
         if door_material == "oak":
             door_material = "wood"
         sapling_material = material
-        if sapling_material == "dark_oak":
+        if sapling_material == "big_oak":
             sapling_material = "roofed_oak"
         block_dict["door_" + door_material + "_lower"] = new_material + "_door_bottom"
         block_dict["door_" + door_material + "_upper"] = new_material + "_door_top"
