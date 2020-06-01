@@ -6,33 +6,12 @@ import os
 minecraft_version = "1.13"
 pack_format = 4
 
-colors = [
-    "black",
-    "blue",
-    "brown",
-    "cyan",
-    "gray",
-    "green",
-    "light_blue",
-    "lime",
-    "magenta",
-    "orange",
-    "pink",
-    "purple",
-    "red",
-    "silver",
-    "white",
-    "yellow",
+COLORS = [
+    "black", "blue", "brown", "cyan", "gray", "green", "light_blue", "lime",
+    "magenta", "orange", "pink", "purple", "red", "silver", "white", "yellow"
 ]
 
-tree_materials = [
-    "acacia",
-    "big_oak",
-    "birch",
-    "jungle",
-    "oak",
-    "spruce",
-]
+TREE_MATERIALS = ["acacia", "big_oak", "birch", "jungle", "oak", "spruce"]
 
 block_dict = {
     "anvil_base": "anvil",
@@ -257,23 +236,14 @@ item_dict = {
     "wooden_armorstand": "armor_stand",
 }
 
-coral_types = [
-    "brain",
-    "bubble",
-    "horn",
-    "tube",
-    "dead_brain",
-    "dead_bubble",
-    "dead_fire",
-    "dead_horn",
-    "dead_tube",
+CORAL_TYPES = [
+    "brain", "bubble", "horn", "tube", "dead_brain",
+    "dead_bubble", "dead_fire", "dead_horn", "dead_tube"
 ]
 
 unnecessary_blocks = [
     "blue_ice",
     "conduit",
-    "kelp",
-    "kelp_plant",
     "kelp",
     "kelp_plant",
     "dried_kelp_top",
@@ -292,101 +262,126 @@ unnecessary_items = [
     "",
 ]
 
-for coral_type in coral_types:
-    unnecessary_blocks.append(coral_type + "_coral")
-    unnecessary_blocks.append(coral_type + "_coral_block")
-    unnecessary_blocks.append(coral_type + "_coral_fan")
-
-for i in range(3):
-    block_dict["cocoa_stage_" + str(i)] = "cocoa_stage" + str(i)
-    block_dict["nether_wart_stage_" + str(i)] = "nether_wart_stage" + str(i)
-
-for i in range(4):
-    block_dict["beetroots_stage_" + str(i)] = "beetroots_stage" + str(i)
-    block_dict["carrots_stage_" + str(i)] = "carrots_stage" + str(i)
-    block_dict["potatoes_stage_" + str(i)] = "potatoes_stage" + str(i)
-
-for i in range(8):
-    block_dict["wheat_stage_" + str(i)] = "wheat_stage" + str(i)
-
-for color in colors:
-    new_color = color
-    if new_color == "silver":
-        new_color = "light_gray"
-    block_dict["concrete_" + color] = new_color + "_concrete"
-    block_dict["concrete_powder_" + color] = new_color + "_concrete_powder"
-    block_dict["glass_" + color] = new_color + "_stained_glass"
-    block_dict["glass_pane_top_" + color] = new_color + "_stained_glass_pane_top"
-    block_dict["glazed_terracotta_" + color] = new_color + "_glazed_terracotta"
-    block_dict["hardened_clay_stained_" + color] = new_color + "_terracotta"
-    if color == "purple":
-        block_dict["shulker_top_" + color] = "shulker_box"
-    else:
-        block_dict["shulker_top_" + color] = new_color + "_shulker_box"
-    block_dict["wool_colored_" + color] = new_color + "_wool"
-
-for material in tree_materials:
-    new_material = material
-    if material == "big_oak":
-        new_material = "dark_oak"
-    door_material = new_material
-    if door_material == "oak":
-        door_material = "wood"
-    sapling_material = material
-    if sapling_material == "dark_oak":
-        sapling_material = "roofed_oak"
-    block_dict["door_" + door_material + "_lower"] = new_material + "_door_bottom"
-    block_dict["door_" + door_material + "_upper"] = new_material + "_door_top"
-    block_dict["leaves_" + material] = new_material + "_leaves"
-    block_dict["log_" + material] = new_material + "_log"
-    block_dict["log_" + material + "_top"] = new_material + "_log_top"
-    block_dict["planks_" + material] = new_material + "_planks"
-    block_dict["sapling_" + sapling_material] = new_material + "_sapling"
-    unnecessary_blocks.append(new_material + "_trapdoor")
-    unnecessary_blocks.append("stripped_" + new_material + "_log")
-    unnecessary_blocks.append("stripped_" + new_material + "_log_top")
-    item_dict["door_" + door_material] = new_material + "_door"
-
-
-if minecraft_version == "1.14":
-    item_dict["dye_powder_green"] = "green_dye"
-    item_dict["dye_powder_red"] = "red_dye"
-    item_dict["dye_powder_yellow"] = "yellow_dye"
-
 def gen_path(subdir, item):
+    """ Generate path. """
     return "assets/minecraft/textures/{}/{}.png".format(subdir, item)
 
-for key, value in block_dict.items():
-    source = gen_path("block", value)
-    target = gen_path("block", key)
+
+def convert(source, target):
+    """ Rename source to target. """
     if os.path.isfile(source):
         # try:
         os.rename(source, target)
         if os.path.isfile(source + ".mcmeta"):
             os.rename(source + ".mcmeta", target + ".mcmeta")
             print("Successfully converted "
-                  + str(source) + ".mcmeta to "
-                  + str(target) + ".mcmeta")
+                  + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
         print("Successfully converted " + str(source) + " to " + str(target))
         # except:
         #     print("An error occured converting " + str(source) + " to " + str(target))
     else:
         print(str(source) + " does not exist!")
 
-for key, value in item_dict.items():
-    source = gen_path("item", value)
-    target = gen_path("item", key)
-    if os.path.isfile(source):
-        os.rename(source, target)
-        if os.path.isfile(source + ".mcmeta"):
-            os.rename(source + ".mcmeta", target + ".mcmeta")
-            print("Successfully converted " + str(source) + ".mcmeta to " + str(target) + ".mcmeta")
-        print("Successfully converted " + str(source) + " to " + str(target))
-    else:
-        print(str(source) + " does not exist!")
 
-# Remove unnecessary textures
-# for block in unnecessary_blocks:
-#     print(block)
-# for item in unnecessary_items:
-#     print(item)
+def remove(file):
+    """ Remove file. """
+    if os.path.isfile(file):
+        os.remove(file)
+        if os.path.isfile(file + ".mcmeta"):
+            os.remove(file + ".mcmeta")
+            print("Successfully removed " + str(file) + ".mcmeta")
+        print("Successfully removed " + str(file))
+    else:
+        print(str(file) + " does not exist!")
+
+
+def convert_resourcepack():
+    """ Convert Resource Pack. """
+    for i in range(3):
+        block_dict["cocoa_stage_" + str(i)] = "cocoa_stage" + str(i)
+        block_dict["nether_wart_stage_" + str(i)] = "nether_wart_stage" + str(i)
+
+    for i in range(4):
+        block_dict["beetroots_stage_" + str(i)] = "beetroots_stage" + str(i)
+        block_dict["carrots_stage_" + str(i)] = "carrots_stage" + str(i)
+        block_dict["potatoes_stage_" + str(i)] = "potatoes_stage" + str(i)
+
+    for i in range(8):
+        block_dict["wheat_stage_" + str(i)] = "wheat_stage" + str(i)
+
+    for color in COLORS:
+        new_color = color
+        if new_color == "silver":
+            new_color = "light_gray"
+        block_dict["concrete_" + color] = new_color + "_concrete"
+        block_dict["concrete_powder_" + color] = new_color + "_concrete_powder"
+        block_dict["glass_" + color] = new_color + "_stained_glass"
+        block_dict["glass_pane_top_" + color] = new_color + "_stained_glass_pane_top"
+        block_dict["glazed_terracotta_" + color] = new_color + "_glazed_terracotta"
+        block_dict["hardened_clay_stained_" + color] = new_color + "_terracotta"
+        if color == "purple":
+            block_dict["shulker_top_" + color] = "shulker_box"
+        else:
+            block_dict["shulker_top_" + color] = new_color + "_shulker_box"
+        block_dict["wool_colored_" + color] = new_color + "_wool"
+
+    if minecraft_version == "1.14":
+        item_dict["dye_powder_green"] = "green_dye"
+        item_dict["dye_powder_red"] = "red_dye"
+        item_dict["dye_powder_yellow"] = "yellow_dye"
+
+    for key, value in block_dict.items():
+        convert(gen_path("block", value), gen_path("block", key))
+
+    for key, value in item_dict.items():
+        convert(gen_path("item", value), gen_path("item", key))
+
+def remove_unnecessary_files():
+    """ Remove unnecessary files. """
+    for coral_type in CORAL_TYPES:
+        unnecessary_blocks.append(coral_type + "_coral")
+        unnecessary_blocks.append(coral_type + "_coral_block")
+        unnecessary_blocks.append(coral_type + "_coral_fan")
+
+    for material in TREE_MATERIALS:
+        if material == "big_oak":
+            material = "dark_oak"
+        unnecessary_blocks.append("stripped_" + material + "_log")
+        unnecessary_blocks.append("stripped_" + material + "_log_top")
+        if material != "oak":
+            unnecessary_blocks.append(material + "_trapdoor")
+
+    for block in unnecessary_blocks:
+        remove(gen_path("block", block))
+    # for item in unnecessary_items:
+    #     remove(gen_path("item", item))
+
+
+def main():
+    """ Main function. """
+
+    for material in TREE_MATERIALS:
+        new_material = material
+        if material == "big_oak":
+            new_material = "dark_oak"
+        door_material = new_material
+        if door_material == "oak":
+            door_material = "wood"
+        sapling_material = material
+        if sapling_material == "dark_oak":
+            sapling_material = "roofed_oak"
+        block_dict["door_" + door_material + "_lower"] = new_material + "_door_bottom"
+        block_dict["door_" + door_material + "_upper"] = new_material + "_door_top"
+        block_dict["leaves_" + material] = new_material + "_leaves"
+        block_dict["log_" + material] = new_material + "_log"
+        block_dict["log_" + material + "_top"] = new_material + "_log_top"
+        block_dict["planks_" + material] = new_material + "_planks"
+        block_dict["sapling_" + sapling_material] = new_material + "_sapling"
+        item_dict["door_" + door_material] = new_material + "_door"
+    convert_resourcepack()
+    remove_unnecessary_files()
+    # TODO: Rename block and item folder
+
+
+if __name__ == '__main__':
+    main()
