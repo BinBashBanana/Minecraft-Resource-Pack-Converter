@@ -6,6 +6,12 @@ import os
 minecraft_version = "1.14"
 pack_format = 4
 
+blockstates = {
+    "wood_button": "oak_button",
+    "wood_pressure_plate": "oak_pressure_plate",
+    "sign": "oak_sign",
+}
+
 COLORS = [
     "black", "blue", "brown", "cyan", "gray", "green", "light_blue", "lime",
     "magenta", "orange", "pink", "purple", "red", "silver", "white", "yellow"
@@ -245,114 +251,30 @@ item_dict = {
     "wooden_armorstand": "armor_stand",
 }
 
-CORAL_TYPES = [
-    "brain", "bubble", "fire", "horn", "tube",
-    "dead_brain", "dead_bubble", "dead_fire", "dead_horn", "dead_tube"
-]
-
-unwanted_blocks = [
-    "honeycomb_block",
-    "lantern",
-    "lily_of_the_valley",
-]
-
-search_unwanted_blocks = [
-    "bee_nest",
-    "beehive",
-    "blue_ice",
-    "bamboo_",
-    "barrel",
-    "bell",
-    "blast_furnace",
-    "campfire",
-    "cartography",
-    "composter",
-    "conduit",
-    "cornflower",
-    "fletching_table",
-    "grindstone",
-    "honey_block",
-    "jigsaw",
-    "kelp",
-    "lectern",
-    "loom",
-    "scaffolding",
-    "seagrass",
-    "sea_pickle",
-    "smithing_table",
-    "smoker",
-    "stonecutter",
-    "turtle_egg",
-    "sweet_berry_bush",
-    "wither_rose",
-]
-
-unwanted_items = [
-    "bamboo",
-    "bell",
-    "campfire",
-    "cod_bucket",
-    "pufferfish_bucket",
-    "salmon_bucket",
-    "tropical_fish_bucket",
-    "black_dye",
-    "blue_dye",
-    "brown_dye",
-    "white_dye",
-    "heart_of_the_sea",
-    "lantern",
-    "leather_horse_armor",
-    "nautilus_shell",
-    "phantom_membrane",
-    "scute",
-    "sea_pickle",
-    "seagrass",
-    "suspicious_stew",
-    "sweet_berries",
-    "trident",
-    "turtle_egg",
-    "turtle_helmet",
-]
-
-search_unwanted_items = [
-    "banner_pattern",
-    "crossbow",
-    "honey",
-    "kelp",
-]
 
 def gen_path(subdir, item):
     """ Generate path. """
-    return "assets/minecraft/textures/{}/{}".format(subdir, item)
+    return "assets/minecraft/{}/{}".format(subdir, item)
 
 
-def convert(source, target):
+def convert(subdir, source, target, extension):
     """ Rename source to target. """
-    source_png = source + ".png"
-    target_png = target + ".png"
-    source_mcmeta = source_png + ".mcmeta"
-    target_mcmeta = target_png + ".mcmeta"
-    if os.path.isfile(source_png):
+    source_path = gen_path(subdir, source + extension)
+    target_path = gen_path(subdir, target + extension)
+    source_path_mcmeta = source_path + ".mcmeta"
+    target_path_mcmeta = target_path + ".mcmeta"
+    if os.path.isfile(source_path):
         # try:
-        os.rename(source_png, target_png)
-        if os.path.isfile(source_mcmeta):
-            os.rename(source_mcmeta, target_mcmeta)
+        os.rename(source_path, target_path)
+        if os.path.isfile(source_path_mcmeta):
+            os.rename(source_path_mcmeta, target_path_mcmeta)
             print("Successfully converted "
-                  + str(source_mcmeta) + " to " + str(target_mcmeta))
-        print("Successfully converted " + str(source_png) + " to " + str(target_png))
+                  + str(source + ".mcmeta") + " to " + str(target + ".mcmeta"))
+        print("Successfully converted " + str(source) + " to " + str(target))
         # except:
         #     print("An error occured converting " + str(source) + " to " + str(target))
     else:
-        print(str(source_png) + " does not exist!")
-
-
-def remove(file, print_error):
-    """ Remove file. """
-    if os.path.isfile(file):
-        os.remove(file)
-        print("Successfully removed " + str(file))
-    elif print_error:
-        print(str(file) + " does not exist!")
+        print(str(source_path) + " does not exist!")
 
 
 def convert_resourcepack():
@@ -390,60 +312,19 @@ def convert_resourcepack():
         item_dict["dye_powder_red"] = "red_dye"
         item_dict["dye_powder_yellow"] = "yellow_dye"
 
+    print("[blockstates]")
+    for key, value in blockstates.items():
+        convert("blockstates", value, key, ".json")
+
+    print("[textures]")
+    print("[../block]")
     for key, value in block_dict.items():
-        convert(gen_path("block", value), gen_path("block", key))
+        convert("textures/block", value, key,".png")
 
+    print("[../item]")
     for key, value in item_dict.items():
-        convert(gen_path("item", value), gen_path("item", key))
+        convert("textures/item", value, key, ".png")
 
-
-def remove_unwanted_files():
-    """ Remove unwanted files. """
-    for coral_type in CORAL_TYPES:
-        unwanted_blocks.append(coral_type + "_coral")
-        unwanted_blocks.append(coral_type + "_coral_block")
-        unwanted_blocks.append(coral_type + "_coral_fan")
-
-    for material in TREE_MATERIALS:
-        if material == "big_oak":
-            material = "dark_oak"
-        unwanted_blocks.append("stripped_" + material + "_log")
-        unwanted_blocks.append("stripped_" + material + "_log_top")
-        if material != "oak":
-            unwanted_blocks.append(material + "_trapdoor")
-            unwanted_items.append(material + "_sign")
-
-    for block in unwanted_blocks:
-        remove(gen_path("block", block + ".png"), False)
-        remove(gen_path("block", block + ".png.mcmeta"), False)
-
-    for item in unwanted_items:
-        remove(gen_path("item", item + ".png"), False)
-        remove(gen_path("item", item + ".png.mcmeta"), False)
-
-    remaining_blocks = []
-    block_dir = "assets/minecraft/textures/block"
-    for block in os.listdir(block_dir):
-        block_path = os.path.join(block_dir, block)
-        if os.path.isfile(block_path):
-            remaining_blocks.append(block)
-
-    remaining_items = []
-    item_dir = "assets/minecraft/textures/item"
-    for item in os.listdir(item_dir):
-        item_path = os.path.join(item_dir, item)
-        if os.path.isfile(item_path):
-            remaining_items.append(item)
-
-    for name in search_unwanted_blocks:
-        for block in remaining_blocks:
-            if name in block:
-                remove(gen_path("block", block), True)
-
-    for name in search_unwanted_items:
-        for item in remaining_items:
-            if name in item:
-                remove(gen_path("item", item), True)
 
 def main():
     """ Main function. """
@@ -467,7 +348,6 @@ def main():
         block_dict["sapling_" + sapling_material] = new_material + "_sapling"
         item_dict["door_" + door_material] = new_material + "_door"
     convert_resourcepack()
-    remove_unwanted_files()
     # TODO: Rename block and item folder
 
 
