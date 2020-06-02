@@ -250,14 +250,15 @@ CORAL_TYPES = [
     "dead_brain", "dead_bubble", "dead_fire", "dead_horn", "dead_tube"
 ]
 
-unnecessary_blocks = [
+unwanted_blocks = [
+    "honeycomb_block",
     "lantern",
     "lily_of_the_valley",
 ]
 
-unnecessary_blocks_search = [
+search_unwanted_blocks = [
     "bee_nest",
-    "bee_hive",
+    "beehive",
     "blue_ice",
     "bamboo_",
     "barrel",
@@ -270,7 +271,7 @@ unnecessary_blocks_search = [
     "cornflower",
     "fletching_table",
     "grindstone",
-    "honey",
+    "honey_block",
     "jigsaw",
     "kelp",
     "lectern",
@@ -286,7 +287,7 @@ unnecessary_blocks_search = [
     "wither_rose",
 ]
 
-unnecessary_items = [
+unwanted_items = [
     "bamboo",
     "bell",
     "campfire",
@@ -313,7 +314,7 @@ unnecessary_items = [
     "turtle_helmet",
 ]
 
-unnecessary_item_search = [
+search_unwanted_items = [
     "banner_pattern",
     "crossbow",
     "honey",
@@ -396,27 +397,27 @@ def convert_resourcepack():
         convert(gen_path("item", value), gen_path("item", key))
 
 
-def remove_unnecessary_files():
-    """ Remove unnecessary files. """
+def remove_unwanted_files():
+    """ Remove unwanted files. """
     for coral_type in CORAL_TYPES:
-        unnecessary_blocks.append(coral_type + "_coral")
-        unnecessary_blocks.append(coral_type + "_coral_block")
-        unnecessary_blocks.append(coral_type + "_coral_fan")
+        unwanted_blocks.append(coral_type + "_coral")
+        unwanted_blocks.append(coral_type + "_coral_block")
+        unwanted_blocks.append(coral_type + "_coral_fan")
 
     for material in TREE_MATERIALS:
         if material == "big_oak":
             material = "dark_oak"
-        unnecessary_blocks.append("stripped_" + material + "_log")
-        unnecessary_blocks.append("stripped_" + material + "_log_top")
+        unwanted_blocks.append("stripped_" + material + "_log")
+        unwanted_blocks.append("stripped_" + material + "_log_top")
         if material != "oak":
-            unnecessary_blocks.append(material + "_trapdoor")
-            unnecessary_items.append(material + "_sign")
+            unwanted_blocks.append(material + "_trapdoor")
+            unwanted_items.append(material + "_sign")
 
-    for block in unnecessary_blocks:
+    for block in unwanted_blocks:
         remove(gen_path("block", block + ".png"), False)
         remove(gen_path("block", block + ".png.mcmeta"), False)
 
-    for item in unnecessary_items:
+    for item in unwanted_items:
         remove(gen_path("item", item + ".png"), False)
         remove(gen_path("item", item + ".png.mcmeta"), False)
 
@@ -434,12 +435,12 @@ def remove_unnecessary_files():
         if os.path.isfile(item_path):
             remaining_items.append(item)
 
-    for name in unnecessary_blocks_search:
+    for name in search_unwanted_blocks:
         for block in remaining_blocks:
             if name in block:
                 remove(gen_path("block", block), True)
 
-    for name in unnecessary_item_search:
+    for name in search_unwanted_items:
         for item in remaining_items:
             if name in item:
                 remove(gen_path("item", item), True)
@@ -466,7 +467,7 @@ def main():
         block_dict["sapling_" + sapling_material] = new_material + "_sapling"
         item_dict["door_" + door_material] = new_material + "_door"
     convert_resourcepack()
-    remove_unnecessary_files()
+    remove_unwanted_files()
     # TODO: Rename block and item folder
 
 
