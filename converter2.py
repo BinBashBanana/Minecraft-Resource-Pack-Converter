@@ -252,9 +252,12 @@ CORAL_TYPES = [
 
 unnecessary_blocks = [
     "lantern",
+    "lily_of_the_valley",
 ]
 
 unnecessary_blocks_search = [
+    "bee_nest",
+    "bee_hive",
     "blue_ice",
     "bamboo_",
     "barrel",
@@ -267,6 +270,7 @@ unnecessary_blocks_search = [
     "cornflower",
     "fletching_table",
     "grindstone",
+    "honey",
     "jigsaw",
     "kelp",
     "lectern",
@@ -312,6 +316,7 @@ unnecessary_items = [
 unnecessary_item_search = [
     "banner_pattern",
     "crossbow",
+    "honey",
     "kelp",
 ]
 
