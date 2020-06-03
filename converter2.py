@@ -136,6 +136,14 @@ block_dict = {
 }
 
 entity_boat = {}
+entity_endercrystal = {
+    'endercrystal': 'end_crystal',
+    'endercrystal_beam': 'end_crystal_beam',
+}
+entity_illager = {
+    'fangs': 'evoker_fangs',
+    'illusionist': 'illusioner'
+}
 
 item_dict = {
     'apple_golden': 'golden_apple',
@@ -311,8 +319,15 @@ def convert_resourcepack():
         convert('block', value, key, 'png')
 
     print("[entity]")
-    print("[../bed]")
     convert('entity/bed', 'light_gray', 'silver', 'png')
+    convert('entity/cow', 'red_mooshroom', 'mooshroom', 'png')
+
+
+    for key, value in entity_endercrystal.items():
+        convert('entity/end_crystal', value, key, 'png')
+
+    for key, value in entity_illager.items():
+        convert('entity/illager', value, key, 'png')
 
     print("[item]")
     for key, value in item_dict.items():
@@ -347,7 +362,7 @@ def main():
     convert_resourcepack()
     # TODO: Rename block and item folder
     # TODO: Cat to ocelot?
-    # TODO: I am here: entity/chest
+    # TODO: I am here: entity/llama
 
 if __name__ == '__main__':
     main()

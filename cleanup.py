@@ -135,11 +135,17 @@ def remove_files():
         remove('block', file + '.png.mcmeta')
 
     print("[entity]")
-    print("[../banner]")
     remove('entity/banner', 'globe.png')
+    remove('entity/cow', 'brown_mooshroom.png')
+    remove('entity/horse/armor', 'horse_armor_leather.png')
+    remove('entity/illager', 'pillager.png')
+    remove('entity/illager', 'ravager.png')
+
     remove_dir('entity/bee/')
     remove_dir('entity/bell/')
-
+    remove_dir('entity/conduit/')
+    remove_dir('entity/fish/')
+    remove_dir('entity/fox/')
 
     print("[item]")
     for file in items:
