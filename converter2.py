@@ -144,6 +144,13 @@ entity_illager = {
     'fangs': 'evoker_fangs',
     'illusionist': 'illusioner'
 }
+entity_llama = {
+    'llama_brown': 'brown',
+    'llama_creamy': 'creamy',
+    'llama_gray': 'gray',
+    'llama_white': 'white',
+}
+entity_llama_decor = {}
 
 item_dict = {
     'apple_golden': 'golden_apple',
@@ -308,6 +315,7 @@ def convert_resourcepack():
         else:
             block_dict['shulker_top_' + color] = new_color + '_shulker_box'
         block_dict['wool_colored_' + color] = new_color + '_wool'
+        entity_llama_decor['decor_' + color] = new_color
 
     if minecraft_version == '1.14':
         item_dict['dye_powder_green'] = 'green_dye'
@@ -321,6 +329,7 @@ def convert_resourcepack():
     print("[entity]")
     convert('entity/bed', 'light_gray', 'silver', 'png')
     convert('entity/cow', 'red_mooshroom', 'mooshroom', 'png')
+    convert('entity/shulker', 'shulker_silver', 'shulker_light_gray', 'png')
 
 
     for key, value in entity_endercrystal.items():
@@ -328,6 +337,12 @@ def convert_resourcepack():
 
     for key, value in entity_illager.items():
         convert('entity/illager', value, key, 'png')
+
+    for key, value in entity_llama.items():
+        convert('entity/llama', value, key, 'png')
+
+    for key, value in entity_llama_decor.items():
+        convert('entity/llama/decor', value, key, 'png')
 
     print("[item]")
     for key, value in item_dict.items():
@@ -362,7 +377,7 @@ def main():
     convert_resourcepack()
     # TODO: Rename block and item folder
     # TODO: Cat to ocelot?
-    # TODO: I am here: entity/llama
+    # TODO: I am here: entity/villager
 
 if __name__ == '__main__':
     main()

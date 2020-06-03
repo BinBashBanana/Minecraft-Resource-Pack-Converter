@@ -50,6 +50,17 @@ search_blocks = [
     'wither_rose',
 ]
 
+entity_cat = [
+    'all_black',
+    'british_shorthair',
+    'calico',
+    'cat_collar',
+    'persian',
+    'ragdoll',
+    'tabby',
+    'white',
+]
+
 items = [
     'bamboo',
     'bell',
@@ -129,25 +140,29 @@ def remove_files():
             items.append(material + '_sign')
             items.append(material + '_wall_sign')
 
-    print("[block]")
     for file in blocks:
         remove('block', file + '.png')
         remove('block', file + '.png.mcmeta')
 
-    print("[entity]")
     remove('entity/banner', 'globe.png')
     remove('entity/cow', 'brown_mooshroom.png')
     remove('entity/horse/armor', 'horse_armor_leather.png')
     remove('entity/illager', 'pillager.png')
     remove('entity/illager', 'ravager.png')
+    remove('entity/llama/decor', 'trader_llama.png')
+    remove('entity/shield', 'globe.png')
+
+    for file in entity_cat:
+        remove('entity/cat', file + '.png')
 
     remove_dir('entity/bee/')
     remove_dir('entity/bell/')
     remove_dir('entity/conduit/')
     remove_dir('entity/fish/')
     remove_dir('entity/fox/')
+    remove_dir('entity/panda/')
+    remove_dir('entity/turtle/')
 
-    print("[item]")
     for file in items:
         remove('item', file + '.png')
         remove('item', file + '.png.mcmeta')
