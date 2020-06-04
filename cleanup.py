@@ -61,6 +61,15 @@ entity_cat = [
     'white',
 ]
 
+gui_container = [
+    'blast_furnace',
+    'cartography_table',
+    'grindstone',
+    'loom',
+    'smoker',
+    'stonecutter',
+]
+
 items = [
     'bamboo',
     'bell',
@@ -118,9 +127,9 @@ def remove_dir(directory):
     path = gen_path(None, directory)
     if os.path.isdir(path):
         shutil.rmtree(path)
-        print("Successfully removed " + str(directory))
+        print("Successfully removed directory " + str(directory))
     elif PRINT_ERRORS:
-        print(str(directory) + " does not exist!")
+        print("The directory " + str(directory) + " does not exist!")
 
 
 def remove_files():
@@ -141,8 +150,8 @@ def remove_files():
             items.append(material + '_wall_sign')
 
     for file in blocks:
-        remove('block', file + '.png')
-        remove('block', file + '.png.mcmeta')
+        remove('blocks', file + '.png')
+        remove('blocks', file + '.png.mcmeta')
 
     remove('entity/banner', 'globe.png')
     remove('entity/cow', 'brown_mooshroom.png')
@@ -151,9 +160,21 @@ def remove_files():
     remove('entity/illager', 'ravager.png')
     remove('entity/llama/decor', 'trader_llama.png')
     remove('entity/shield', 'globe.png')
+    remove('entity/zombie', 'drowned.png')
+    remove('entity/zombie', 'drowned_outer_layer.png')
+    remove('entity', 'dolphin.png')
+    remove('entity', 'phantom.png')
+    remove('entity', 'phantom_eyes.png')
+    remove('entity', 'trident.png')
+    remove('entity', 'trident_riptide.png')
+    remove('entity', 'wandering_trader.png')
+    remove('models/armor', 'turtle_layer_1.png')
 
     for file in entity_cat:
         remove('entity/cat', file + '.png')
+
+    for file in gui_container:
+        remove('gui/container', file + '.png')
 
     remove_dir('entity/bee/')
     remove_dir('entity/bell/')
@@ -164,18 +185,18 @@ def remove_files():
     remove_dir('entity/turtle/')
 
     for file in items:
-        remove('item', file + '.png')
-        remove('item', file + '.png.mcmeta')
+        remove('items', file + '.png')
+        remove('items', file + '.png.mcmeta')
 
     remaining_blocks = []
-    block_dir = 'assets/minecraft/textures/block'
+    block_dir = 'assets/minecraft/textures/blocks'
     for block in os.listdir(block_dir):
         block_path = os.path.join(block_dir, block)
         if os.path.isfile(block_path):
             remaining_blocks.append(block)
 
     remaining_items = []
-    item_dir = 'assets/minecraft/textures/item'
+    item_dir = 'assets/minecraft/textures/items'
     for item in os.listdir(item_dir):
         item_path = os.path.join(item_dir, item)
         if os.path.isfile(item_path):
@@ -184,12 +205,12 @@ def remove_files():
     for name in search_blocks:
         for block in remaining_blocks:
             if name in block:
-                remove('block', block)
+                remove('blocks', block)
 
     for name in search_items:
         for item in remaining_items:
             if name in item:
-                remove('item', item)
+                remove('items', item)
 
 def main():
     """ Main function. """

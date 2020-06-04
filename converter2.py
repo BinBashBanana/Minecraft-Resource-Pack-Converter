@@ -322,15 +322,13 @@ def convert_resourcepack():
         item_dict['dye_powder_red'] = 'red_dye'
         item_dict['dye_powder_yellow'] = 'yellow_dye'
 
-    print("[block]")
     for key, value in block_dict.items():
         convert('block', value, key, 'png')
 
-    print("[entity]")
     convert('entity/bed', 'light_gray', 'silver', 'png')
     convert('entity/cow', 'red_mooshroom', 'mooshroom', 'png')
-    convert('entity/shulker', 'shulker_silver', 'shulker_light_gray', 'png')
-
+    convert('entity/shulker', 'shulker_light_gray', 'shulker_silver', 'png')
+    convert('entity', 'snow_golem', 'snowman', 'png')
 
     for key, value in entity_endercrystal.items():
         convert('entity/end_crystal', value, key, 'png')
@@ -344,7 +342,6 @@ def convert_resourcepack():
     for key, value in entity_llama_decor.items():
         convert('entity/llama/decor', value, key, 'png')
 
-    print("[item]")
     for key, value in item_dict.items():
         convert('item', value, key, 'png')
 
@@ -375,9 +372,8 @@ def main():
         entity_boat['boat_' + material] = boat_material
         item_dict['door_' + door_material] = new_material + '_door'
     convert_resourcepack()
-    # TODO: Rename block and item folder
-    # TODO: Cat to ocelot?
-    # TODO: I am here: entity/villager
+    os.rename("assets/minecraft/textures/block", "assets/minecraft/textures/blocks")
+    os.rename("assets/minecraft/textures/item", "assets/minecraft/textures/items")
 
 if __name__ == '__main__':
     main()
