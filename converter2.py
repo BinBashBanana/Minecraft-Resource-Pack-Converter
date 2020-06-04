@@ -2,6 +2,7 @@
 """ Convert Minecraft Resource Packs. """
 
 import os
+import shutil
 
 minecraft_version = '1.14'
 pack_format = 4
@@ -328,13 +329,19 @@ def convert_resourcepack():
     convert('entity/bed', 'light_gray', 'silver', 'png')
     convert('entity/cow', 'red_mooshroom', 'mooshroom', 'png')
     convert('entity/shulker', 'shulker_light_gray', 'shulker_silver', 'png')
+    convert('entity/shulker', 'shulker', 'shulker_purple', 'png')
     convert('entity', 'snow_golem', 'snowman', 'png')
+
+    for key, value in entity_boat.items():
+        convert('entity/boat', value, key, 'png')
 
     for key, value in entity_endercrystal.items():
         convert('entity/end_crystal', value, key, 'png')
 
     for key, value in entity_illager.items():
         convert('entity/illager', value, key, 'png')
+
+    copy_file('entity/llama/creamy.png', 'entity/llama/llama.png')
 
     for key, value in entity_llama.items():
         convert('entity/llama', value, key, 'png')
@@ -344,6 +351,44 @@ def convert_resourcepack():
 
     for key, value in item_dict.items():
         convert('item', value, key, 'png')
+
+    rename_dir('entity/end_crystal', 'entity/endercrystal')
+
+
+def rename_dir(from_name, to_name):
+    """ Rename directory. """
+    root_dir = 'assets/minecraft/textures/'
+    source = root_dir + from_name
+    target = root_dir + to_name
+    if os.path.isdir(source):
+        os.rename(source, target)
+        print("Successfully renamed directory " + str(from_name) + " to " + str(to_name))
+    else:
+        print("The directory " + str(source) + " does not exist!")
+
+
+def move_file(from_name, to_name):
+    """ Move file. """
+    root_dir = 'assets/minecraft/textures/'
+    source = root_dir + from_name
+    target = root_dir + to_name
+    if os.path.isfile(source):
+        os.rename(source, target)
+        print("Successfully renamed " + str(from_name) + " to " + str(to_name))
+    else:
+        print(str(source) + " does not exist!")
+
+
+def copy_file(from_name, to_name):
+    """ Copy file. """
+    root_dir = 'assets/minecraft/textures/'
+    source = root_dir + from_name
+    target = root_dir + to_name
+    if os.path.isfile(source):
+        shutil.copyfile(source, target)
+        print("Successfully copied " + str(from_name) + " to " + str(to_name))
+    else:
+        print(str(source) + " does not exist!")
 
 
 def main():
@@ -360,8 +405,8 @@ def main():
             door_material = 'wood'
         if sapling_material == 'big_oak':
             sapling_material = 'roofed_oak'
-        if boat_material == 'darkoak':
-            boat_material = 'dark_oak'
+        if boat_material == 'big_oak':
+            boat_material = 'darkoak'
         block_dict['door_' + door_material + '_lower'] = new_material + '_door_bottom'
         block_dict['door_' + door_material + '_upper'] = new_material + '_door_top'
         block_dict['leaves_' + material] = new_material + '_leaves'
@@ -369,11 +414,19 @@ def main():
         block_dict['log_' + material + '_top'] = new_material + '_log_top'
         block_dict['planks_' + material] = new_material + '_planks'
         block_dict['sapling_' + sapling_material] = new_material + '_sapling'
-        entity_boat['boat_' + material] = boat_material
+        entity_boat['boat_' + boat_material] = new_material
         item_dict['door_' + door_material] = new_material + '_door'
     convert_resourcepack()
-    os.rename("assets/minecraft/textures/block", "assets/minecraft/textures/blocks")
-    os.rename("assets/minecraft/textures/item", "assets/minecraft/textures/items")
+    rename_dir('block', 'blocks')
+    rename_dir('item', 'items')
+    move_file('entity/signs/oak.png', 'entity/sign.png')
+    move_file('entity/iron_golem/iron_golem.png', 'entity/iron_golem.png')
+
+    # TODO: entity/chest
+    # TODO: entity/iron_golem
+    # TODO: entity/villager
+    # TODO: entity/zombie_villager
+
 
 if __name__ == '__main__':
     main()

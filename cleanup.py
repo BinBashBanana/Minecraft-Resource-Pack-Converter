@@ -17,6 +17,7 @@ blocks = [
     'honeycomb_block',
     'lantern',
     'lily_of_the_valley',
+    'purple_shulker_box',
 ]
 
 search_blocks = [
@@ -55,11 +56,14 @@ entity_cat = [
     'british_shorthair',
     'calico',
     'cat_collar',
+    'jellie',
     'persian',
     'ragdoll',
     'tabby',
     'white',
 ]
+
+entity_signs = []
 
 gui_container = [
     'blast_furnace',
@@ -146,6 +150,7 @@ def remove_files():
         blocks.append('stripped_' + material + '_log_top')
         if material != 'oak':
             blocks.append(material + '_trapdoor')
+            entity_signs.append(material)
             items.append(material + '_sign')
             items.append(material + '_wall_sign')
 
@@ -173,8 +178,15 @@ def remove_files():
     for file in entity_cat:
         remove('entity/cat', file + '.png')
 
+    for file in entity_signs:
+        remove('entity/signs', file + '.png')
+
     for file in gui_container:
         remove('gui/container', file + '.png')
+
+    for file in items:
+        remove('items', file + '.png')
+        remove('items', file + '.png.mcmeta')
 
     remove_dir('entity/bee/')
     remove_dir('entity/bell/')
@@ -182,11 +194,8 @@ def remove_files():
     remove_dir('entity/fish/')
     remove_dir('entity/fox/')
     remove_dir('entity/panda/')
+    remove_dir('entity/signs/')
     remove_dir('entity/turtle/')
-
-    for file in items:
-        remove('items', file + '.png')
-        remove('items', file + '.png.mcmeta')
 
     remaining_blocks = []
     block_dir = 'assets/minecraft/textures/blocks'
