@@ -422,11 +422,6 @@ def main():
     move_file('entity/signs/oak.png', 'entity/sign.png')
     move_file('entity/iron_golem/iron_golem.png', 'entity/iron_golem.png')
 
-    # TODO: entity/chest
-    # TODO: entity/iron_golem
-    # TODO: entity/villager
-    # TODO: entity/zombie_villager
-
 
 if __name__ == '__main__':
     main()

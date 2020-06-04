@@ -2,7 +2,7 @@
 """ Convert Minecraft Resource Packs. """
 
 import os
-import shutil
+#import shutil
 
 PRINT_ERRORS = False
 
@@ -51,6 +51,14 @@ search_blocks = [
     'wither_rose',
 ]
 
+entity_bee = [
+    'bee_angry_nectar',
+    'bee_angry',
+    'bee_nectar',
+    'bee',
+    'bee_stinger',
+]
+
 entity_cat = [
     'all_black',
     'british_shorthair',
@@ -61,6 +69,41 @@ entity_cat = [
     'ragdoll',
     'tabby',
     'white',
+]
+
+entity_conduit = [
+    'base',
+    'break_particle',
+    'cage',
+    'closed_eye',
+    'open_eye',
+    'wind',
+    'wind_vertical',
+]
+
+entity_fish = [
+    'cod',
+    'pufferfish',
+    'salmon',
+    'tropical_a',
+    'tropical_b',
+]
+
+entity_fox = [
+    'fox',
+    'fox_sleep',
+    'snow_fox',
+    'snow_fox_sleep',
+]
+
+entity_panda = [
+    'aggressive_panda',
+    'brown_panda',
+    'lazy_panda',
+    'panda',
+    'playful_panda',
+    'weak_panda',
+    'worried_panda',
 ]
 
 entity_signs = []
@@ -130,7 +173,8 @@ def remove_dir(directory):
     """ Remove directory. """
     path = gen_path(None, directory)
     if os.path.isdir(path):
-        shutil.rmtree(path)
+        os.rmdir(path)
+        #shutil.rmtree(path)
         print("Successfully removed directory " + str(directory))
     elif PRINT_ERRORS:
         print("The directory " + str(directory) + " does not exist!")
@@ -158,11 +202,17 @@ def remove_files():
         remove('blocks', file + '.png')
         remove('blocks', file + '.png.mcmeta')
 
+    for i in range(6):
+        entity_fish.append('tropical_a_pattern_' + str(i + 1))
+        entity_fish.append('tropical_b_pattern_' + str(i + 1))
+
     remove('entity/banner', 'globe.png')
     remove('entity/cow', 'brown_mooshroom.png')
     remove('entity/horse/armor', 'horse_armor_leather.png')
     remove('entity/illager', 'pillager.png')
     remove('entity/illager', 'ravager.png')
+    for value in ['low', 'medium', 'high']:
+        remove('entity/iron_golem', 'iron_golem_crackiness_' + value + '.png')
     remove('entity/llama/decor', 'trader_llama.png')
     remove('entity/shield', 'globe.png')
     remove('entity/zombie', 'drowned.png')
@@ -175,11 +225,39 @@ def remove_files():
     remove('entity', 'wandering_trader.png')
     remove('models/armor', 'turtle_layer_1.png')
 
+    for file in entity_bee:
+        remove('entity/bee', file + '.png')
+    remove_dir('entity/bee/')
+
+    remove('entity/bell', 'bell_body.png')
+    remove_dir('entity/bell/')
+
     for file in entity_cat:
         remove('entity/cat', file + '.png')
 
+    for file in entity_conduit:
+        remove('entity/conduit', file + '.png')
+        remove('entity/conduit', file + '.png.mcmeta')
+    remove_dir('entity/conduit/')
+
+    for file in entity_fish:
+        remove('entity/fish', file + '.png')
+    remove_dir('entity/fish/')
+
+    for file in entity_fox:
+        remove('entity/fox', file + '.png')
+    remove_dir('entity/fox/')
+
+    for file in entity_panda:
+        remove('entity/panda', file + '.png')
+    remove_dir('entity/panda/')
+
     for file in entity_signs:
         remove('entity/signs', file + '.png')
+    remove_dir('entity/signs/')
+
+    remove('entity/turtle', 'big_sea_turtle.png')
+    remove_dir('entity/turtle/')
 
     for file in gui_container:
         remove('gui/container', file + '.png')
@@ -188,14 +266,7 @@ def remove_files():
         remove('items', file + '.png')
         remove('items', file + '.png.mcmeta')
 
-    remove_dir('entity/bee/')
-    remove_dir('entity/bell/')
-    remove_dir('entity/conduit/')
-    remove_dir('entity/fish/')
-    remove_dir('entity/fox/')
-    remove_dir('entity/panda/')
-    remove_dir('entity/signs/')
-    remove_dir('entity/turtle/')
+    remove('map', 'map_background_checkerboard.png')
 
     remaining_blocks = []
     block_dir = 'assets/minecraft/textures/blocks'
