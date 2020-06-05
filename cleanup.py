@@ -213,6 +213,7 @@ def remove_files():
     remove('entity/illager', 'ravager.png')
     for value in ['low', 'medium', 'high']:
         remove('entity/iron_golem', 'iron_golem_crackiness_' + value + '.png')
+    remove_dir('entity/iron_golem/')
     remove('entity/llama/decor', 'trader_llama.png')
     remove('entity/shield', 'globe.png')
     remove('entity/zombie', 'drowned.png')
@@ -258,6 +259,8 @@ def remove_files():
 
     remove('entity/turtle', 'big_sea_turtle.png')
     remove_dir('entity/turtle/')
+
+    remove('gui', 'accessibility.png')
 
     for file in gui_container:
         remove('gui/container', file + '.png')
