@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-""" Convert Minecraft Resource Packs. """
+""" Remove files that doesn't exist in 1.12. """
 
 import os
-#import shutil
+import shutil
 
 PRINT_ERRORS = False
 
@@ -14,13 +14,26 @@ CORAL_TYPES = [
 TREE_MATERIALS = ['acacia', 'big_oak', 'birch', 'jungle', 'oak', 'spruce']
 
 blocks = [
+    'chain',
+    'chiseled_nether_bricks',
+    'cracked_nether_bricks',
+    'crying_obsidian',
     'honeycomb_block',
     'lantern',
     'lily_of_the_valley',
+    'nether_gold_ore',
+    'nether_sprouts',
     'purple_shulker_box',
+    'quartz_bricks',
+    'shroomlight',
+    'soul_soil',
+    'soul_torch',
 ]
 
 search_blocks = [
+    'ancient_debris',
+    'basalt',
+    'blackstone',
     'bee_nest',
     'beehive',
     'blue_ice',
@@ -33,30 +46,33 @@ search_blocks = [
     'composter',
     'conduit',
     'cornflower',
+    'crimson',
     'fletching_table',
     'grindstone',
     'honey_block',
     'jigsaw',
     'kelp',
     'lectern',
+    'lodestone',
     'loom',
+    'netherite',
+    'respawn_anchor',
     'scaffolding',
     'seagrass',
     'sea_pickle',
     'smithing_table',
     'smoker',
+    'soul_fire',
+    'soul_lantern',
     'stonecutter',
+    'stripped_',
+    'target',
     'turtle_egg',
+    'twisting_vines',
     'sweet_berry_bush',
+    'warped_',
+    'weeping_vines',
     'wither_rose',
-]
-
-entity_bee = [
-    'bee_angry_nectar',
-    'bee_angry',
-    'bee_nectar',
-    'bee',
-    'bee_stinger',
 ]
 
 entity_cat = [
@@ -71,48 +87,13 @@ entity_cat = [
     'white',
 ]
 
-entity_conduit = [
-    'base',
-    'break_particle',
-    'cage',
-    'closed_eye',
-    'open_eye',
-    'wind',
-    'wind_vertical',
-]
-
-entity_fish = [
-    'cod',
-    'pufferfish',
-    'salmon',
-    'tropical_a',
-    'tropical_b',
-]
-
-entity_fox = [
-    'fox',
-    'fox_sleep',
-    'snow_fox',
-    'snow_fox_sleep',
-]
-
-entity_panda = [
-    'aggressive_panda',
-    'brown_panda',
-    'lazy_panda',
-    'panda',
-    'playful_panda',
-    'weak_panda',
-    'worried_panda',
-]
-
-entity_signs = []
-
 gui_container = [
     'blast_furnace',
     'cartography_table',
+    'gamemode_switcher',
     'grindstone',
     'loom',
+    'smithing',
     'smoker',
     'stonecutter',
 ]
@@ -121,6 +102,7 @@ items = [
     'bamboo',
     'bell',
     'campfire',
+    'chain',
     'cod_bucket',
     'pufferfish_bucket',
     'salmon_bucket',
@@ -132,11 +114,15 @@ items = [
     'heart_of_the_sea',
     'lantern',
     'leather_horse_armor',
+    'music_disc_pigstep',
     'nautilus_shell',
+    'nether_sprouts',
     'phantom_membrane',
     'scute',
     'sea_pickle',
     'seagrass',
+    'soul_campfire',
+    'soul_lantern',
     'suspicious_stew',
     'sweet_berries',
     'trident',
@@ -146,9 +132,12 @@ items = [
 
 search_items = [
     'banner_pattern',
+    'crimson_',
     'crossbow',
     'honey',
     'kelp',
+    'netherite',
+    'warped_',
 ]
 
 
@@ -169,12 +158,14 @@ def remove(subdir, file):
         print(str(file) + " does not exist!")
 
 
-def remove_dir(directory):
+def remove_dir(directory, force=False):
     """ Remove directory. """
     path = gen_path(None, directory)
     if os.path.isdir(path):
-        os.rmdir(path)
-        #shutil.rmtree(path)
+        if force:
+            shutil.rmtree(path)
+        else:
+            os.rmdir(path)
         print("Successfully removed directory " + str(directory))
     elif PRINT_ERRORS:
         print("The directory " + str(directory) + " does not exist!")
@@ -190,11 +181,8 @@ def remove_files():
     for material in TREE_MATERIALS:
         if material == 'big_oak':
             material = 'dark_oak'
-        blocks.append('stripped_' + material + '_log')
-        blocks.append('stripped_' + material + '_log_top')
         if material != 'oak':
             blocks.append(material + '_trapdoor')
-            entity_signs.append(material)
             items.append(material + '_sign')
             items.append(material + '_wall_sign')
 
@@ -202,65 +190,48 @@ def remove_files():
         remove('blocks', file + '.png')
         remove('blocks', file + '.png.mcmeta')
 
-    for i in range(6):
-        entity_fish.append('tropical_a_pattern_' + str(i + 1))
-        entity_fish.append('tropical_b_pattern_' + str(i + 1))
-
-    remove('entity/banner', 'globe.png')
-    remove('entity/cow', 'brown_mooshroom.png')
-    remove('entity/horse/armor', 'horse_armor_leather.png')
-    remove('entity/illager', 'pillager.png')
-    remove('entity/illager', 'ravager.png')
-    for value in ['low', 'medium', 'high']:
-        remove('entity/iron_golem', 'iron_golem_crackiness_' + value + '.png')
-    remove_dir('entity/iron_golem/')
-    remove('entity/llama/decor', 'trader_llama.png')
-    remove('entity/shield', 'globe.png')
-    remove('entity/zombie', 'drowned.png')
-    remove('entity/zombie', 'drowned_outer_layer.png')
     remove('entity', 'dolphin.png')
     remove('entity', 'phantom.png')
     remove('entity', 'phantom_eyes.png')
     remove('entity', 'trident.png')
     remove('entity', 'trident_riptide.png')
     remove('entity', 'wandering_trader.png')
-    remove('models/armor', 'turtle_layer_1.png')
 
-    for file in entity_bee:
-        remove('entity/bee', file + '.png')
-    remove_dir('entity/bee/')
-
-    remove('entity/bell', 'bell_body.png')
-    remove_dir('entity/bell/')
+    for file in ['globe', 'piglin']:
+        remove('entity/banner', file + '.png')
+        remove('entity/shield', file + '.png')
 
     for file in entity_cat:
         remove('entity/cat', file + '.png')
 
-    for file in entity_conduit:
-        remove('entity/conduit', file + '.png')
-        remove('entity/conduit', file + '.png.mcmeta')
-    remove_dir('entity/conduit/')
+    remove('entity/cow', 'brown_mooshroom.png')
+    remove('entity/horse/armor', 'horse_armor_leather.png')
+    remove('entity/illager', 'pillager.png')
+    remove('entity/illager', 'ravager.png')
 
-    for file in entity_fish:
-        remove('entity/fish', file + '.png')
-    remove_dir('entity/fish/')
+    for value in ['low', 'medium', 'high']:
+        remove('entity/iron_golem', 'iron_golem_crackiness_' + value + '.png')
 
-    for file in entity_fox:
-        remove('entity/fox', file + '.png')
-    remove_dir('entity/fox/')
+    remove('entity/llama/decor', 'trader_llama.png')
+    remove('entity/zombie', 'drowned.png')
+    remove('entity/zombie', 'drowned_outer_layer.png')
 
-    for file in entity_panda:
-        remove('entity/panda', file + '.png')
-    remove_dir('entity/panda/')
+    remove('models/armor', 'turtle_layer_1.png')
 
-    for file in entity_signs:
-        remove('entity/signs', file + '.png')
-    remove_dir('entity/signs/')
+    remove_dir('entity/bee/', force=True)
+    remove_dir('entity/bell/', force=True)
+    remove_dir('entity/conduit/', force=True)
+    remove_dir('entity/fish/', force=True)
+    remove_dir('entity/fox/', force=True)
+    remove_dir('entity/hoglin/', force=True)
+    remove_dir('entity/panda/', force=True)
+    remove_dir('entity/piglin/', force=True)
+    remove_dir('entity/signs/', force=True)
+    remove_dir('entity/strider/', force=True)
+    remove_dir('entity/turtle/', force=True)
 
-    remove('entity/turtle', 'big_sea_turtle.png')
-    remove_dir('entity/turtle/')
-
-    remove('gui', 'accessibility.png')
+    for file in ['accessibility', 'social_interactions']:
+        remove('gui', file + '.png')
 
     for file in gui_container:
         remove('gui/container', file + '.png')
