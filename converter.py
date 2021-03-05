@@ -1,4 +1,4 @@
-import os, sys, shutil, json
+import os, sys, shutil, json, datetime
 
 # Format: Key: 1.12, Value: 1.13
 
@@ -468,11 +468,13 @@ if not opr in ["up", "down"]:
 	print(usage)
 	sys.exit(0)
 
+tempDir = "CONVERTERTEMP-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
 # Conversion functions
 def tryRename(dir, before, after):
-	if os.path.isfile("CONVERTERTEMP/assets/minecraft/textures/%s/%s.png" % (dir, before)):
+	if os.path.isfile("%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, before)):
 		try:
-			os.rename("CONVERTERTEMP/assets/minecraft/textures/%s/%s.png" % (dir, before), "CONVERTERTEMP/assets/minecraft/textures/%s/%s.png" % (dir, after))
+			os.rename("%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, before), "%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, after))
 			print("Successfully converted %s.png to %s.png" % (before, after))
 		except:
 			print("An error occured while converting %s.png to %s.png" % (before, after))
@@ -483,32 +485,32 @@ def convertDir(dict, dir):
 	if opr == "up":
 		for key, value in dict.items():
 			tryRename(dir + "s", key, value)
-		os.rename("CONVERTERTEMP/assets/minecraft/textures/%ss" % dir, "CONVERTERTEMP/assets/minecraft/textures/%s" % dir)
+		os.rename("%s/assets/minecraft/textures/%ss" % (tempDir, dir), "%s/assets/minecraft/textures/%s" % (tempDir, dir))
 	elif opr == "down":
 		for key, value in dict.items():
 			tryRename(dir, value, key)
-		os.rename("CONVERTERTEMP/assets/minecraft/textures/%s" % dir, "CONVERTERTEMP/assets/minecraft/textures/%ss" % dir)
+		os.rename("%s/assets/minecraft/textures/%s" % (tempDir, dir), "%s/assets/minecraft/textures/%ss" % (tempDir, dir))
 
 # Unpack the resource pack
 print("Unpacking")
-shutil.unpack_archive(infile, "CONVERTERTEMP", "zip")
+shutil.unpack_archive(infile, tempDir, "zip")
 
 # Convert the block/ and item/ dirs
 convertDir(blockDict, "block")
 convertDir(itemDict, "item")
 
 # Edit pack.mcmeta
-mcmeta_1 = open("CONVERTERTEMP/pack.mcmeta", mode="r", encoding="utf-8").read()
+mcmeta_1 = open("%s/pack.mcmeta" % tempDir, mode="r", encoding="utf-8").read()
 mcmeta_2 = json.loads(mcmeta_1, strict=False)
 mcmeta_3 = mcmeta_2.get("pack")
 mcmeta_3.update({"pack_format": (3, 4)[opr == "up"]})
 mcmeta_2.update({"pack": mcmeta_3})
-open("CONVERTERTEMP/pack.mcmeta", mode="w", encoding="utf-8").write(json.dumps(mcmeta_2, ensure_ascii=False))
+open("%s/pack.mcmeta" % tempDir, mode="w", encoding="utf-8").write(json.dumps(mcmeta_2, ensure_ascii=False))
 
 # Repack the resource pack
 print("\nRepacking")
 outfile = os.path.splitext(infile)[0] + "---" + ("1.12", "1.13")[opr == "up"]
-shutil.make_archive(outfile, "zip", "CONVERTERTEMP")
-shutil.rmtree("CONVERTERTEMP")
+shutil.make_archive(outfile, "zip", tempDir)
+shutil.rmtree(tempDir)
 
 print("\nDone! Output file: %s.zip" % outfile)
