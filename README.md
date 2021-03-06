@@ -11,5 +11,5 @@ This converter currently supports blocks, items and entities.
 - blockstates/
 - models/block/
 - models/item/
-- (optifine/mcpatcher)ctm/ctm/
+- (optifine/mcpatcher)/ctm/ctm/
 - textures/ctm/
