@@ -2,6 +2,12 @@ import os, sys, shutil, json, datetime
 
 # Format: Key: 1.12, Value: 1.13
 
+dirDict = {
+	"textures/blocks/": "textures/block/",
+	"textures/items/": "textures/item/",
+	"textures/entity/endercrystal/": "textures/entity/end_crystal/"
+}
+
 blockDict = {
 	"anvil_base": "anvil",
 	"anvil_slightly_damaged": "chipped_anvil",
@@ -450,6 +456,38 @@ itemDict = {
 	"trip_wire": "tripwire"
 }
 
+entityDict = {
+	"boat/boat_acacia": "boat/acacia",
+	"boat/boat_birch": "boat/birch",
+	"boat/boat_darkoak": "boat/dark_oak",
+	"boat/boat_jungle": "boat/jungle",
+	"boat/boat_oak": "boat/oak",
+	"boat/boat_spruce": "boat/spruce",
+	"end_crystal/endercrystal": "end_crystal/end_crystal",
+	"end_crystal/endercrystal_beam": "end_crystal/end_crystal_beam",
+	"llama/llama_brown": "llama/brown",
+	"llama/llama_creamy": "llama/creamy",
+	"llama/llama_gray": "llama/gray",
+	"llama/llama_white": "llama/white",
+	"llama/decor/decor_black": "llama/decor/black",
+	"llama/decor/decor_blue": "llama/decor/blue",
+	"llama/decor/decor_brown": "llama/decor/brown",
+	"llama/decor/decor_cyan": "llama/decor/cyan",
+	"llama/decor/decor_gray": "llama/decor/gray",
+	"llama/decor/decor_green": "llama/decor/green",
+	"llama/decor/decor_light_blue": "llama/decor/light_blue",
+	"llama/decor/decor_lime": "llama/decor/lime",
+	"llama/decor/decor_magenta": "llama/decor/magenta",
+	"llama/decor/decor_orange": "llama/decor/orange",
+	"llama/decor/decor_pink": "llama/decor/pink",
+	"llama/decor/decor_purple": "llama/decor/purple",
+	"llama/decor/decor_red": "llama/decor/red",
+	"llama/decor/decor_silver": "llama/decor/light_gray",
+	"llama/decor/decor_white": "llama/decor/white",
+	"llama/decor/decor_yellow": "llama/decor/yellow",
+	"snowman": "snow_golem"
+}
+
 # Get command line arguments
 usage = "\nUsage: converter.py <up|down> texturepack.zip"
 
@@ -471,33 +509,43 @@ if not opr in ["up", "down"]:
 tempDir = "CONVERTERTEMP-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 # Conversion functions
-def tryRename(dir, before, after):
-	if os.path.isfile("%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, before)):
-		try:
-			os.rename("%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, before), "%s/assets/minecraft/textures/%s/%s.png" % (tempDir, dir, after))
-			print("Successfully converted %s.png to %s.png" % (before, after))
-		except:
-			print("An error occured while converting %s.png to %s.png" % (before, after))
-	else:
-		print("%s.png doesn't exist, skipping" % before)
+def renameDir(before, after):
+	if os.path.isdir("%s/assets/minecraft/%s" % (tempDir, before)):
+		os.rename("%s/assets/minecraft/%s" % (tempDir, before), "%s/assets/minecraft/%s" % (tempDir, after))
+		print("Directory %s --> %s" % (before, after))
+
+def renameFile(before, after):
+	if os.path.isfile("%s/assets/minecraft/%s.png" % (tempDir, before)):
+		os.rename("%s/assets/minecraft/%s.png" % (tempDir, before), "%s/assets/minecraft/%s.png" % (tempDir, after))
 
 def convertDir(dict, dir):
-	if opr == "up":
-		for key, value in dict.items():
-			tryRename(dir + "s", key, value)
-		os.rename("%s/assets/minecraft/textures/%ss" % (tempDir, dir), "%s/assets/minecraft/textures/%s" % (tempDir, dir))
-	elif opr == "down":
-		for key, value in dict.items():
-			tryRename(dir, value, key)
-		os.rename("%s/assets/minecraft/textures/%s" % (tempDir, dir), "%s/assets/minecraft/textures/%ss" % (tempDir, dir))
+	for key, value in dict.items():
+		if opr == "up":
+			renameFile(dir + key, dir + value)
+		elif opr == "down":
+			renameFile(dir + value, dir + key)
+	print("Converted %s" % dir)
 
 # Unpack the resource pack
-print("Unpacking")
+print("Unpacking\n")
 shutil.unpack_archive(infile, tempDir, "zip")
 
-# Convert the block/ and item/ dirs
-convertDir(blockDict, "block")
-convertDir(itemDict, "item")
+# Dirs to 1.13?
+if opr == "up":
+	for key, value in dirDict.items():
+		renameDir(key, value)
+	print("")
+
+# Convert the dirs
+convertDir(blockDict, "textures/block/")
+convertDir(itemDict, "textures/item/")
+convertDir(entityDict, "textures/entity/")
+
+# Dirs to 1.12?
+if opr == "down":
+	print("")
+	for key, value in dirDict.items():
+		renameDir(value, key)
 
 # Edit pack.mcmeta
 mcmeta_1 = open("%s/pack.mcmeta" % tempDir, mode="r", encoding="utf-8").read()
