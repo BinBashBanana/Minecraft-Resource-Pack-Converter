@@ -191,6 +191,7 @@ blockDict = {
 	"hardened_clay_stained_magenta": "magenta_terracotta",
 	"hardened_clay_stained_orange": "orange_terracotta",
 	"hardened_clay_stained_pink": "pink_terracotta",
+	"hardened_clay_stained_purple": "purple_terracotta",
 	"hardened_clay_stained_red": "red_terracotta",
 	"hardened_clay_stained_silver": "light_gray_terracotta",
 	"hardened_clay_stained_white": "white_terracotta",
@@ -293,7 +294,6 @@ blockDict = {
 	"tallgrass": "grass",
 	"terracotta_purple": "purple_terracotta",
 	"torch_on": "torch",
-	"trip_wire_source": "trip_wire_hook",
 	"waterlily": "lily_pad",
 	"web": "cobweb",
 	"wheat_stage_0": "wheat_stage0",
@@ -340,7 +340,34 @@ blockDict = {
 	"wooden_pressure_plate": "oak_pressure_plate",
 	"wood_pressure_plate": "oak_pressure_plate",
 	"trapdoor": "oak_trapdoor",
-	"hopper_down": "hopper"
+	"fire_layer_0": "fire_0",
+	"fire_layer_1": "fire_1",
+	"flower_paeonia": "paeonia",
+	"itemframe_background": "item_frame",
+	"mob_spawner": "spawner",
+	"portal": "nether_portal",
+	"pumpkin_face_off": "carved_pumpkin",
+	"pumpkin_face_on": "jack_o_lantern",
+	"redstone_lamp_off": "redstone_lamp",
+	"red_nether_brick": "red_nether_bricks",
+	"shulker_top_black": "black_shulker_box",
+	"shulker_top_blue": "blue_shulker_box",
+	"shulker_top_brown": "brown_shulker_box",
+	"shulker_top_cyan": "cyan_shulker_box",
+	"shulker_top_gray": "gray_shulker_box",
+	"shulker_top_green": "green_shulker_box",
+	"shulker_top_light_blue": "light_blue_shulker_box",
+	"shulker_top_lime": "lime_shulker_box",
+	"shulker_top_magenta": "magenta_shulker_box",
+	"shulker_top_orange": "orange_shulker_box",
+	"shulker_top_pink": "pink_shulker_box",
+	"shulker_top_purple": "shulker_box",
+	"shulker_top_red": "red_shulker_box",
+	"shulker_top_silver": "light_gray_shulker_box",
+	"shulker_top_white": "white_shulker_box",
+	"shulker_top_yellow": "yellow_shulker_box",
+	"trip_wire": "tripwire",
+	"trip_wire_source": "tripwire_hook"
 }
 
 itemDict = {
@@ -453,7 +480,13 @@ itemDict = {
 	"wooden_armorstand": "armor_stand",
 	"wooden_pressure_plate": "oak_pressure_plate",
 	"wood_pressure_plate": "oak_pressure_plate",
-	"trip_wire": "tripwire"
+	"chorus_fruit_popped": "popped_chorus_fruit",
+	"fish_clownfish_raw": "tropical_fish",
+	"map_filled": "filled_map",
+	"map_filled_markings": "filled_map_markings",
+	"melon": "melon_slice",
+	"netherbrick": "nether_brick",
+	"reeds": "sugar_cane"
 }
 
 entityDict = {
@@ -517,6 +550,8 @@ def renameDir(before, after):
 def renameFile(before, after):
 	if os.path.isfile("%s/assets/minecraft/%s.png" % (tempDir, before)):
 		os.rename("%s/assets/minecraft/%s.png" % (tempDir, before), "%s/assets/minecraft/%s.png" % (tempDir, after))
+	if os.path.isfile("%s/assets/minecraft/%s.png.mcmeta" % (tempDir, before)):
+		os.rename("%s/assets/minecraft/%s.png.mcmeta" % (tempDir, before), "%s/assets/minecraft/%s.png.mcmeta" % (tempDir, after))
 
 def convertDir(dict, dir):
 	for key, value in dict.items():
