@@ -540,25 +540,34 @@ if not opr in ["up", "down"]:
 	sys.exit(0)
 
 tempDir = "CONVERTERTEMP-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+dirTemplate = "%s/assets/minecraft/%s"
 
 # Conversion functions
 def renameDir(before, after):
-	if os.path.isdir("%s/assets/minecraft/%s" % (tempDir, before)):
-		os.rename("%s/assets/minecraft/%s" % (tempDir, before), "%s/assets/minecraft/%s" % (tempDir, after))
+	if os.path.isdir(dirTemplate % (tempDir, before)):
+		os.rename(dirTemplate % (tempDir, before), dirTemplate % (tempDir, after))
 		print("Directory %s --> %s" % (before, after))
 
 def renameFile(before, after):
-	if os.path.isfile("%s/assets/minecraft/%s.png" % (tempDir, before)):
-		os.rename("%s/assets/minecraft/%s.png" % (tempDir, before), "%s/assets/minecraft/%s.png" % (tempDir, after))
-	if os.path.isfile("%s/assets/minecraft/%s.png.mcmeta" % (tempDir, before)):
-		os.rename("%s/assets/minecraft/%s.png.mcmeta" % (tempDir, before), "%s/assets/minecraft/%s.png.mcmeta" % (tempDir, after))
+	if os.path.isfile(dirTemplate % (tempDir, before)):
+		os.rename(dirTemplate % (tempDir, before), dirTemplate % (tempDir, after))
 
-def convertDir(dict, dir):
+def convertPng(before, after, ext, opt):
+	renameFile(before + ext, after + ext)
+	if opt:
+		if "mcmeta" in opt:
+			renameFile(before + ext + ".mcmeta", after + ext + ".mcmeta")
+		if "_n" in opt:
+			renameFile(before + "_n" + ext, after + "_n" + ext)
+		if "_s" in opt:
+			renameFile(before + "_s" + ext, after + "_s" + ext)
+
+def convertPngDir(dict, dir, ext, *opt):
 	for key, value in dict.items():
 		if opr == "up":
-			renameFile(dir + key, dir + value)
+			convertPng(dir + key, dir + value, ext, opt)
 		elif opr == "down":
-			renameFile(dir + value, dir + key)
+			convertPng(dir + value, dir + key, ext, opt)
 	print("Converted %s" % dir)
 
 # Unpack the resource pack
@@ -572,9 +581,9 @@ if opr == "up":
 	print("")
 
 # Convert the dirs
-convertDir(blockDict, "textures/block/")
-convertDir(itemDict, "textures/item/")
-convertDir(entityDict, "textures/entity/")
+convertPngDir(blockDict, "textures/block/", ".png", "mcmeta", "_n", "_s")
+convertPngDir(itemDict, "textures/item/", ".png")
+convertPngDir(entityDict, "textures/entity/", ".png")
 
 # Dirs to 1.12?
 if opr == "down":
